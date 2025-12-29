@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { ArrowLeft, Calendar, Gauge, Fuel, Settings2, CheckCircle2, ShieldCheck, Share2, ArrowRight, Copy, Check } from "lucide-react"
+import { ArrowLeft, Calendar, Gauge, Fuel, Settings2, CheckCircle2, ShieldCheck, Share2, ArrowRight, Copy, Check, Eye } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import useEmblaCarousel from "embla-carousel-react"
 import Autoplay from "embla-carousel-autoplay"
@@ -29,6 +30,7 @@ type Vehicle = {
     images: string[]
     description?: string
     features?: string[]
+    view_count?: number
 }
 
 const demoVehicles: Vehicle[] = [
@@ -85,6 +87,7 @@ export default function VehicleDetailsPage() {
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000, stopOnInteraction: true })])
     const [selectedIndex, setSelectedIndex] = useState(0)
     const [copied, setCopied] = useState(false)
+    const [viewCount, setViewCount] = useState<number>(0)
 
     useEffect(() => {
         if (!emblaApi) return
@@ -97,10 +100,24 @@ export default function VehicleDetailsPage() {
     const scrollNext = () => emblaApi && emblaApi.scrollNext()
     const scrollTo = (index: number) => emblaApi && emblaApi.scrollTo(index)
 
-    const handleCopyLink = () => {
-        navigator.clipboard.writeText(window.location.href)
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
+    const handleShare = async () => {
+        const shareData = {
+            title: `${vehicle?.year} ${vehicle?.make} ${vehicle?.model}`,
+            text: `Check out this ${vehicle?.year} ${vehicle?.make} ${vehicle?.model} at Woody Motors!`,
+            url: window.location.href,
+        }
+
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData)
+            } catch (err) {
+                console.log("Error sharing:", err)
+            }
+        } else {
+            navigator.clipboard.writeText(window.location.href)
+            setCopied(true)
+            setTimeout(() => setCopied(false), 2000)
+        }
     }
 
     // ...
@@ -134,16 +151,49 @@ export default function VehicleDetailsPage() {
             }
 
             // 3. Fetch from Supabase (Real DB)
-            const supabase = createClient()
             if (supabase) {
                 const { data, error } = await supabase.from("vehicles").select("*").eq("id", id).single()
                 if (data && !error) {
                     setVehicle(data)
+                    setViewCount(data.view_count || 0)
                 }
             }
             setLoading(false)
         }
         fetchVehicle()
+    }, [params.id])
+
+    // Real-time View Count Logic
+    useEffect(() => {
+        const id = params.id as string
+        const supabase = createClient()
+        if (!supabase) return
+
+        // 1. Increment View Count
+        const incrementView = async () => {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (session) {
+                console.log("Admin view skipped")
+                return
+            }
+            await supabase.rpc("increment_vehicle_view_count", { vehicle_id: id })
+        }
+        incrementView()
+
+        // 2. Subscribe to Real-time Updates
+        const channel = supabase
+            .channel(`public:vehicles:id=eq.${id}`)
+            .on("postgres_changes", { event: "UPDATE", schema: "public", table: "vehicles", filter: `id=eq.${id}` }, (payload) => {
+                console.log("Real-time update:", payload)
+                if (payload.new && typeof payload.new.view_count === 'number') {
+                    setViewCount(payload.new.view_count)
+                }
+            })
+            .subscribe()
+
+        return () => {
+            supabase.removeChannel(channel)
+        }
     }, [params.id])
 
     if (loading) return <div className="min-h-screen flex items-center justify-center bg-[#fafafa]">Loading...</div>
@@ -158,10 +208,29 @@ export default function VehicleDetailsPage() {
                     </Link>
                 </Button>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+                >
                     {/* Left: Images (Carousel) */}
                     <div className="space-y-6">
                         <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl bg-white relative group">
+                            {/* Watching Badge */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.5 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.5, type: "spring" }}
+                                className="absolute top-6 left-6 z-20 bg-black/80 backdrop-blur-md text-white px-4 py-2 rounded-full flex items-center gap-2 border border-white/10 shadow-xl"
+                            >
+                                <span className="relative flex h-3 w-3">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                                </span>
+                                <span className="text-xs font-bold tracking-wider">{viewCount} WATCHING</span>
+                            </motion.div>
+
                             <div className="overflow-hidden h-full" ref={emblaRef}>
                                 <div className="flex h-full">
                                     {(vehicle.images && vehicle.images.length > 0 ? vehicle.images : ["/placeholder.png"]).filter(img => !img.includes("placeholder") || vehicle.images.length === 0).map((img, index) => (
@@ -210,7 +279,12 @@ export default function VehicleDetailsPage() {
                     </div>
 
                     {/* Right: Details */}
-                    <div className="space-y-8">
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        className="space-y-8"
+                    >
                         <div>
                             <div className="flex items-center gap-4 mb-4">
                                 {vehicle.condition === "brand_new" && <Badge className="bg-black text-white hover:bg-black/90">BRAND NEW</Badge>}
@@ -264,7 +338,7 @@ export default function VehicleDetailsPage() {
                                 size="lg"
                                 variant="outline"
                                 className="h-14 font-bold rounded-xl border-2"
-                                onClick={handleCopyLink}
+                                onClick={handleShare}
                             >
                                 {copied ? (
                                     <>
@@ -272,7 +346,7 @@ export default function VehicleDetailsPage() {
                                     </>
                                 ) : (
                                     <>
-                                        <Share2 className="w-5 h-5 mr-2" /> Copy Link
+                                        <Share2 className="w-5 h-5 mr-2" /> Share / Copy Link
                                     </>
                                 )}
                             </Button>
@@ -285,8 +359,8 @@ export default function VehicleDetailsPage() {
                                 <p className="text-sm text-blue-700/80">This vehicle has passed our rigorous 150-point inspection and comes with a 1-year warranty on major components.</p>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             </div>
         </div>
     )

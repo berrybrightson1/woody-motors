@@ -8,9 +8,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 import { getStoredVehicles, type Vehicle } from "@/lib/local-storage"
-
-// Demo vehicles shown when database is not configured
-const demoVehicles: Vehicle[] = []
+import { DEMO_VEHICLES } from "@/lib/demo-data"
 
 export function NewArrivalsCarousel({ vehicles }: { vehicles: Vehicle[] }) {
   // Use demo vehicles if no real data available
@@ -20,8 +18,7 @@ export function NewArrivalsCarousel({ vehicles }: { vehicles: Vehicle[] }) {
   React.useEffect(() => {
     if (vehicles.length === 0) {
       const stored = getStoredVehicles()
-      // Map stored format to carousel format if needed, though they seem compatible
-      setDisplayVehicles(stored.length > 0 ? stored : [])
+      setDisplayVehicles(stored.length > 0 ? stored : DEMO_VEHICLES)
     } else {
       setDisplayVehicles(vehicles)
     }

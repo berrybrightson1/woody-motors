@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -15,6 +15,8 @@ import { Facebook, Instagram } from "lucide-react"
 import { storeVehicle, type Vehicle } from "@/lib/local-storage"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
+
+import { Switch } from "@/components/ui/switch"
 
 export default function NewInventoryPage() {
   const [step, setStep] = useState(1)
@@ -39,7 +41,21 @@ export default function NewInventoryPage() {
     engine: "",
     transmission: "automatic",
     fuelType: "petrol",
+    isInstallment: false,
+    monthlyPayment: ""
   })
+
+  // Auto-calculate monthly payment
+  useEffect(() => {
+    if (formData.price && formData.isInstallment && !formData.monthlyPayment) {
+      const price = Number.parseFloat(formData.price.replace(/,/g, ""))
+      if (!isNaN(price)) {
+        // Simple logic: Price / 36 months * 1.2 interest factor
+        const calculated = Math.round((price / 36) * 1.2)
+        setFormData(prev => ({ ...prev, monthlyPayment: calculated.toString() }))
+      }
+    }
+  }, [formData.price, formData.isInstallment])
 
   const years = Array.from({ length: 30 }, (_, i) => (new Date().getFullYear() - i).toString())
 
@@ -136,7 +152,10 @@ export default function NewInventoryPage() {
       fuel_type: formData.fuelType,
       is_duty_paid: true,
       vin_verified: true,
-      description: caption
+      description: caption,
+      is_installment_available: formData.isInstallment,
+      monthly_installment_value: formData.isInstallment ? Number.parseFloat(formData.monthlyPayment.replace(/,/g, "")) : undefined,
+      view_count: 0
     }
 
     const isDemoMode = !process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -176,6 +195,8 @@ export default function NewInventoryPage() {
         images: images,
         is_duty_paid: true,
         vin_verified: true,
+        is_installment_available: formData.isInstallment,
+        monthly_installment_value: formData.isInstallment ? Number.parseFloat(formData.monthlyPayment.replace(/,/g, "")) : undefined,
       })
 
       if (error) throw error
@@ -409,6 +430,48 @@ export default function NewInventoryPage() {
                     </SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              {/* Financials - Installments */}
+              <div className="md:col-span-2 pt-4 border-t border-white/5">
+                <div className="flex items-center justify-between mb-4">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-white/40 ml-4">
+                    Financial Options
+                  </Label>
+                  <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/5">
+                    <Label htmlFor="installment-toggle" className="text-sm font-bold text-white cursor-pointer">
+                      Enable Installment Plan?
+                    </Label>
+                    <Switch
+                      id="installment-toggle"
+                      checked={formData.isInstallment}
+                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isInstallment: checked }))}
+                      className="data-[state=checked]:bg-primary"
+                    />
+                  </div>
+                </div>
+
+                {formData.isInstallment && (
+                  <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                        <span className="text-white/40 font-bold">$</span>
+                      </div>
+                      <Input
+                        placeholder="Auto-calculated (e.g. 1,500)"
+                        className="rounded-2xl bg-primary/10 border-primary/20 h-16 text-white font-black text-xl px-10 focus:bg-primary/20 transition-colors"
+                        value={formData.monthlyPayment}
+                        onChange={(e) => setFormData({ ...formData, monthlyPayment: e.target.value })}
+                      />
+                      <div className="absolute inset-y-0 right-6 flex items-center pointer-events-none">
+                        <span className="text-primary font-bold text-sm uppercase tracking-wide">/ Month</span>
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-white/40 mt-2 ml-4 font-bold uppercase tracking-wide">
+                      * Auto-calculated based on standard 36-month financing terms
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

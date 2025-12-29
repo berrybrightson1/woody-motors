@@ -16,6 +16,10 @@ export type Vehicle = {
     status: string
     engine_size?: string
     vin?: string
+    // New Financial & Social Fields
+    is_installment_available?: boolean
+    monthly_installment_value?: number
+    view_count?: number
 }
 
 const STORAGE_KEY = "woodymotors_vehicles_demo"

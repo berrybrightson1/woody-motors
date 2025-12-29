@@ -8,53 +8,14 @@ import { Badge } from "@/components/ui/badge"
 import { Plus, ArrowLeft, Trash2, Edit, X, Check } from "lucide-react"
 import Link from "next/link"
 import { getStoredVehicles, deleteStoredVehicle, type Vehicle } from "@/lib/local-storage"
+import { DEMO_VEHICLES } from "@/lib/demo-data"
 import { toast } from "sonner"
-
-// Demo vehicles when database is not configured
-const demoVehicles: Vehicle[] = [
-    {
-        id: "demo-1",
-        make: "Mercedes-Benz",
-        model: "S-Class",
-        year: 2024,
-        price: 85000,
-        condition: "brand_new",
-        images: ["/luxury-car-showroom.png"],
-        status: "available",
-        mileage: 0, transmission: "Automatic", fuel_type: "Petrol", is_duty_paid: true, vin_verified: true
-    },
-    {
-        id: "demo-2",
-        make: "BMW",
-        model: "7 Series",
-        year: 2023,
-        price: 72000,
-        condition: "foreign_used",
-        images: ["/car-front.png"],
-        status: "available",
-        mileage: 26000, transmission: "Automatic", fuel_type: "Diesel", is_duty_paid: true, vin_verified: true
-    },
-    {
-        id: "demo-3",
-        make: "Lexus",
-        model: "LX 600",
-        year: 2024,
-        price: 95000,
-        condition: "brand_new",
-        images: ["/luxury-car-shot-.jpg"],
-        status: "sold",
-        mileage: 0, transmission: "Automatic", fuel_type: "Petrol", is_duty_paid: true, vin_verified: true
-    },
-]
 
 export default function AdminInventoryPage() {
     const [vehicles, setVehicles] = useState<Vehicle[]>([])
     const [loading, setLoading] = useState(true)
     const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null)
     const [isDemo, setIsDemo] = useState(false)
-
-    // ...
-    // ...
 
     useEffect(() => {
         async function fetchVehicles() {
@@ -65,7 +26,7 @@ export default function AdminInventoryPage() {
             // avoiding hardcoded demoVehicles ensures "clean" dashboard
             if (!supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
                 const stored = getStoredVehicles()
-                setVehicles(stored)
+                setVehicles(stored.length > 0 ? stored : DEMO_VEHICLES)
                 setIsDemo(true)
                 setLoading(false)
                 return
@@ -76,7 +37,7 @@ export default function AdminInventoryPage() {
             if (!data || data.length === 0) {
                 // If DB empty/failed, fall back to local storage
                 const stored = getStoredVehicles()
-                setVehicles(stored)
+                setVehicles(stored.length > 0 ? stored : DEMO_VEHICLES)
                 setIsDemo(true)
             } else {
                 setVehicles(data)

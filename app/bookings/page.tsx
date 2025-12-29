@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CalendarIcon, Clock, Mic, MicOff } from "lucide-react"
+import { CalendarIcon, Clock, Mic, MicOff, ArrowLeft } from "lucide-react"
 import { toast } from "sonner"
 
 
@@ -134,7 +134,15 @@ function NewBookingForm() {
       <div className="max-w-2xl mx-auto">
         <Card className="border-none shadow-2xl rounded-3xl overflow-hidden">
           {/* Header */}
-          <div className="bg-white p-8 text-center border-b border-gray-100">
+          {/* Header */}
+          <div className="bg-white p-8 border-b border-gray-100 flex flex-col items-start text-left">
+            <Button
+              variant="ghost"
+              onClick={() => router.back()}
+              className="hover:bg-black/5 text-muted-foreground pl-0 -ml-3 mb-6 h-auto py-2"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" /> Back
+            </Button>
             <h1 className="text-4xl font-bold text-secondary mb-2">Schedule Service</h1>
             <p className="text-secondary/60 text-lg">Book your premium maintenance or test drive session</p>
           </div>

@@ -6,6 +6,7 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
+import { DreamGarageFAB } from "@/components/dream-garage-fab"
 import "./globals.css"
 
 const inter = Inter({
@@ -64,6 +65,7 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
           <Toaster />
+          <DreamGarageFAB />
         </ThemeProvider>
         <Analytics />
       </body>
