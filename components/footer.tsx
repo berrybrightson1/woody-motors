@@ -3,7 +3,7 @@ import { Car, Mail, Phone, MapPin } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer className="bg-secondary text-white">
+    <footer className="bg-secondary text-white relative z-10">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -31,6 +31,11 @@ export function Footer() {
               <li>
                 <Link href="/inventory" className="text-white/70 hover:text-primary transition-colors text-sm">
                   Inventory
+                </Link>
+              </li>
+              <li>
+                <Link href="/parts" className="text-white/70 hover:text-primary transition-colors text-sm">
+                  Shop Parts
                 </Link>
               </li>
               <li>

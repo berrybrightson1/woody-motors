@@ -14,6 +14,7 @@ export function Navigation() {
   const navItems = [
     { href: "/", label: "Home" },
     { href: "/inventory", label: "Inventory" },
+    { href: "/parts", label: "Shop Parts" },
     { href: "/bookings", label: "Book Service" },
     { href: "/about", label: "About" },
   ]

@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, LayoutDashboard, Car, Settings, LogOut, ArrowRight, Calendar } from "lucide-react"
+import { Plus, LayoutDashboard, Car, Settings, LogOut, ArrowRight, Calendar, Wrench } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { getStoredVehicles } from "@/lib/local-storage"
@@ -70,6 +70,7 @@ export default function AdminDashboard() {
         <div className="space-y-2">
           {[
             { label: "Manage Inventory", desc: "View, edit, and update vehicles", icon: Car, href: "/admin/inventory" },
+            { label: "Manage Parts", desc: "Spare parts catalog", icon: Wrench, href: "/admin/parts" },
             { label: "Service Queue", desc: "Customer bookings and problems", icon: Calendar, href: "/admin/bookings" },
             { label: "Site Settings", desc: "Exchange rates and configuration", icon: Settings, href: "/admin/settings" },
           ].map((action) => (

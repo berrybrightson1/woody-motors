@@ -12,6 +12,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import useEmblaCarousel from "embla-carousel-react"
 import Autoplay from "embla-carousel-autoplay"
+import { PartsCard } from "@/components/parts-card"
+import { SparePart } from "@/lib/types"
 
 import { getStoredVehicles } from "@/lib/local-storage"
 
@@ -88,6 +90,7 @@ export default function VehicleDetailsPage() {
     const [selectedIndex, setSelectedIndex] = useState(0)
     const [copied, setCopied] = useState(false)
     const [viewCount, setViewCount] = useState<number>(0)
+    const [compatibleParts, setCompatibleParts] = useState<SparePart[]>([])
 
     useEffect(() => {
         if (!emblaApi) return
@@ -151,6 +154,7 @@ export default function VehicleDetailsPage() {
             }
 
             // 3. Fetch from Supabase (Real DB)
+            const supabase = createClient()
             if (supabase) {
                 const { data, error } = await supabase.from("vehicles").select("*").eq("id", id).single()
                 if (data && !error) {
@@ -162,6 +166,38 @@ export default function VehicleDetailsPage() {
         }
         fetchVehicle()
     }, [params.id])
+
+    // Compatible Parts Fetcher
+    useEffect(() => {
+        if (!vehicle) return
+
+        async function fetchParts() {
+            const supabase = createClient()
+            if (!supabase) return
+
+            // Search for parts compatible with make OR universal
+            // Supabase postgREST filter for array columns is tricky with OR logic combined with is_universal
+            // So we fetch a bit broadly and filter, or make two queries.
+            // Let's try a simple approach: fetch universal OR matches make
+
+            const { data } = await supabase
+                .from("spare_parts")
+                .select("*")
+                .limit(4)
+
+            if (data) {
+                // Client side filter for better precision with arrays
+                // @ts-ignore
+                const matches = data.filter(p =>
+                    p.is_universal ||
+                    (p.compatible_makes && p.compatible_makes.includes(vehicle!.make)) ||
+                    (p.compatible_models && p.compatible_models.includes(vehicle!.model))
+                )
+                setCompatibleParts(matches.slice(0, 3))
+            }
+        }
+        fetchParts()
+    }, [vehicle])
 
     // Real-time View Count Logic
     useEffect(() => {
@@ -361,6 +397,26 @@ export default function VehicleDetailsPage() {
                         </div>
                     </motion.div>
                 </motion.div>
+
+
+                {/* Compatible Parts Section */}
+                {compatibleParts.length > 0 && (
+                    <div className="mt-24 border-t border-gray-200 pt-12">
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="text-2xl font-black text-secondary uppercase tracking-tighter">
+                                Upgrade Your {vehicle.make}
+                            </h2>
+                            <Button variant="outline" asChild>
+                                <Link href="/parts">View All Parts</Link>
+                            </Button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {compatibleParts.map(part => (
+                                <PartsCard key={part.id} part={part} />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )
