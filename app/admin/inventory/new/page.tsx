@@ -12,7 +12,6 @@ import { useRef } from "react"
 import { generateCarCaption } from "@/app/actions/ai"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Facebook, Instagram } from "lucide-react"
-import { storeVehicle, type Vehicle } from "@/lib/local-storage"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
 
@@ -131,49 +130,13 @@ export default function NewInventoryPage() {
   const handlePublish = async () => {
     setPublishing(true)
 
-    // Simulate processing
-    await new Promise(resolve => setTimeout(resolve, 2000))
-
-    // Prepare vehicle object for saving
-    const newVehicle: Vehicle = {
-      id: crypto.randomUUID(),
-      make: formData.manufacturer,
-      model: formData.model,
-      year: Number.parseInt(formData.year),
-      price: Number.parseFloat(formData.price.replace(/,/g, "")),
-      // Use local images if saving locally, otherwise Supabase would need storage (which we lack in demo)
-      images: images,
-      condition: formData.condition as "foreign_used" | "brand_new" | "pre_owned",
-      status: "available",
-      vin: formData.vin || "DEMO-VIN",
-      mileage: Number.parseInt(formData.mileage) || 0,
-      engine_size: formData.engine,
-      transmission: formData.transmission,
-      fuel_type: formData.fuelType,
-      is_duty_paid: true,
-      vin_verified: true,
-      description: caption,
-      is_installment_available: formData.isInstallment,
-      monthly_installment_value: formData.isInstallment ? Number.parseFloat(formData.monthlyPayment.replace(/,/g, "")) : undefined,
-      view_count: 0
-    }
-
-    const isDemoMode = !process.env.NEXT_PUBLIC_SUPABASE_URL
-
-    if (isDemoMode) {
-      // Demo mode success
-      storeVehicle(newVehicle)
-
-      const platforms = ["Showroom"]
-      if (socials.facebook) platforms.push("Facebook")
-      if (socials.instagram) platforms.push("Instagram")
-
-      toast.success("VEHICLE LIVE ON NETWORK", {
-        description: `Successfully syndicated to: ${platforms.join(", ")}`,
-        className: "bg-[#00ff9d] border-none text-black font-black tracking-widest uppercase",
-        duration: 5000,
+    // STRICT MODE: Real Database Only
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      toast.error("Database Not Configured", {
+        description: "Add NEXT_PUBLIC_SUPABASE_URL to your .env file",
+        className: "bg-red-500 border-none text-white font-bold",
       })
-      router.push("/admin")
+      setPublishing(false)
       return
     }
 
@@ -212,15 +175,12 @@ export default function NewInventoryPage() {
       })
 
       router.push("/admin")
-    } catch (error) {
-      console.error("[v0] Failed to publish to database, falling back to local storage:", error)
-      // Fallback to local storage if DB fails
-      storeVehicle(newVehicle)
-      toast.error("Cloud Sync Failed", {
-        description: "Switched to local storage backup. Your vehicle is safe.",
+    } catch (error: any) {
+      console.error("Failed to publish vehicle:", error)
+      toast.error("Publishing Failed", {
+        description: error.message || "Could not save vehicle to database",
         className: "bg-red-500 border-none text-white font-bold",
       })
-      router.push("/admin")
     } finally {
       setPublishing(false)
     }

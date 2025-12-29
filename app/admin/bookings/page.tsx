@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Calendar, Clock, User, Car, MessageSquare, Phone, Mail, CheckCircle, XCircle, AlertCircle, ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import { toast } from "sonner"
 
 type Booking = {
     id: string
@@ -78,6 +79,7 @@ const SERVICE_LABELS: Record<string, string> = {
     alignment: "Wheel Alignment",
     tire_service: "Tire Service",
     detailing: "Full Detailing",
+    PURCHASE_INQUIRY: "Vehicle Purchase Inquiry",
 }
 
 const STATUS_CONFIG = {
@@ -93,12 +95,11 @@ export default function AdminBookingsPage() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        async function fetchBookings() {
-            const supabase = createClient()
+        const supabase = createClient()
 
+        async function fetchBookings() {
             if (!supabase) {
-                // Use demo data when Supabase is not configured
-                setBookings(demoBookings)
+                toast.error("Database not configured")
                 setLoading(false)
                 return
             }
@@ -109,17 +110,36 @@ export default function AdminBookingsPage() {
                 query = query.eq("status", filter)
             }
 
-            const { data } = await query
+            const { data, error } = await query
 
-            if (!data || data.length === 0) {
-                setBookings(demoBookings)
-            } else {
-                setBookings(data)
+            if (error) {
+                console.error("Error fetching bookings:", error)
+                toast.error("Failed to load bookings")
             }
+
+            setBookings(data || [])
             setLoading(false)
         }
 
         fetchBookings()
+
+        // Realtime Subscription
+        if (supabase) {
+            const channel = supabase
+                .channel('admin-bookings-changes')
+                .on(
+                    'postgres_changes',
+                    { event: '*', schema: 'public', table: 'service_bookings' },
+                    () => {
+                        fetchBookings() // Refresh list on any change
+                    }
+                )
+                .subscribe()
+
+            return () => {
+                supabase.removeChannel(channel)
+            }
+        }
     }, [filter])
 
     const filteredBookings = filter === "all"
@@ -151,6 +171,36 @@ export default function AdminBookingsPage() {
                 </div>
 
                 <div className="flex gap-2">
+                    <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={async () => {
+                            if (!confirm("⚠️ DELETE ALL BOOKINGS?\n\nThis action cannot be undone!")) return
+
+                            const supabase = createClient()
+                            if (!supabase) {
+                                alert("Database connection not available")
+                                return
+                            }
+
+                            try {
+                                const { error } = await supabase
+                                    .from("service_bookings")
+                                    .delete()
+                                    .gte('created_at', '2000-01-01')
+
+                                if (error) throw error
+
+                                toast.success("Queue Cleared!", { description: "All bookings deleted." })
+                            } catch (err: any) {
+                                console.error("Delete error:", err)
+                                toast.error("Failed to clear queue", { description: err.message })
+                            }
+                        }}
+                        className="rounded-md mr-2"
+                    >
+                        Clear Queue
+                    </Button>
                     {["all", "pending", "confirmed", "completed"].map((status) => (
                         <Button
                             key={status}

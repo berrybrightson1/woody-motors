@@ -28,6 +28,29 @@ export const metadata: Metadata = {
   keywords: ["luxury cars", "premium vehicles", "car service", "automotive", "car dealership", "Woody Motors"],
   authors: [{ name: "Woody Motors" }],
   generator: "v0.app",
+  metadataBase: new URL("https://woodymotors.com"),
+  openGraph: {
+    title: "Woody Motors | Premium Automotive Excellence",
+    description: "Experience premium automotive excellence with our curated collection of luxury vehicles.",
+    url: "https://woodymotors.com",
+    siteName: "Woody Motors",
+    images: [
+      {
+        url: "/luxury-car-showroom.png",
+        width: 1200,
+        height: 630,
+        alt: "Woody Motors Showroom",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Woody Motors | Premium Automotive Excellence",
+    description: "Experience premium automotive excellence with our curated collection of luxury vehicles.",
+    images: ["/luxury-car-showroom.png"],
+  },
   icons: {
     icon: [
       {

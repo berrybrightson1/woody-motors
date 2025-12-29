@@ -330,8 +330,8 @@ export default function VehicleDetailsPage() {
 
                         <div className="flex flex-col gap-4">
                             <Button asChild size="lg" className="h-16 text-lg font-bold rounded-xl bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20">
-                                <Link href={`/bookings?vehicle=${encodeURIComponent(`${vehicle.year} ${vehicle.make} ${vehicle.model}`)}`}>
-                                    REQUEST SESSION
+                                <Link href={`/buy-now?vehicle=${encodeURIComponent(`${vehicle.year} ${vehicle.make} ${vehicle.model}`)}`}>
+                                    BUY NOW
                                 </Link>
                             </Button>
                             <Button
