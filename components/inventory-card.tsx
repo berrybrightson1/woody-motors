@@ -199,26 +199,25 @@ export function InventoryCard({ vehicle, currency = "GHS", exchangeRate = 15.0 }
                     ))}
                 </div>
 
-                <Button
-                    asChild
-                    variant="outline"
-                    className={`w-full h-14 rounded-2xl border-2 transition-all group/btn bg-transparent ${vehicle.status?.toLowerCase() === "sold"
-                            ? "border-red-500/50 hover:bg-red-500 hover:border-red-500 hover:text-white text-red-600"
-                            : "border-green-500/30 hover:border-green-500 hover:bg-green-500 hover:text-white text-green-600"
-                        }`}
-                >
-                    <Link
-                        href={`/inventory/${vehicle.id}`}
-                        className="flex items-center justify-center gap-2"
+                {vehicle.status?.toLowerCase() === "sold" ? (
+                    <div className="w-full h-14 rounded-2xl border-2 border-red-500/50 text-red-600 flex items-center justify-center bg-transparent cursor-default">
+                        <span className="font-black uppercase tracking-widest text-xs">Sold</span>
+                    </div>
+                ) : (
+                    <Button
+                        asChild
+                        variant="outline"
+                        className="w-full h-14 rounded-2xl border-2 border-green-500/30 hover:border-green-500 hover:bg-green-500 hover:text-white text-green-600 transition-all group/btn bg-transparent"
                     >
-                        <span className="font-black uppercase tracking-widest text-xs">
-                            {vehicle.status?.toLowerCase() === "sold" ? "Sold" : "Available"}
-                        </span>
-                        {vehicle.status?.toLowerCase() !== "sold" && (
+                        <Link
+                            href={`/inventory/${vehicle.id}`}
+                            className="flex items-center justify-center gap-2"
+                        >
+                            <span className="font-black uppercase tracking-widest text-xs">Available</span>
                             <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                        )}
-                    </Link>
-                </Button>
+                        </Link>
+                    </Button>
+                )}
             </div>
         </div>
     )
