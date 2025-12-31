@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
@@ -16,7 +16,7 @@ import { SparePart } from "@/lib/types"
 // Hardcoded WhatsApp Number for inquiries
 const WHATSAPP_NUMBER = "233551171353"
 
-export default function PartQuotePage() {
+function QuoteContent() {
     const searchParams = useSearchParams()
     const router = useRouter()
     const partId = searchParams.get("id")
@@ -241,5 +241,13 @@ export default function PartQuotePage() {
                 </Card>
             </div>
         </div>
+    )
+}
+
+export default function PartQuotePage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] pt-32 text-center text-white/50">Loading form...</div>}>
+            <QuoteContent />
+        </Suspense>
     )
 }
