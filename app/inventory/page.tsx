@@ -17,7 +17,7 @@ const CURRENCY_SYMBOLS = {
 
 export default function InventoryPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
-  const [currency, setCurrency] = useState<Currency>("USD")
+  const [currency, setCurrency] = useState<Currency>("GHS")
   const [exchangeRate, setExchangeRate] = useState(15.0) // Default GHS rate
   const [conditionFilter, setConditionFilter] = useState<"all" | "foreign_used" | "brand_new">("all")
 
@@ -83,7 +83,7 @@ export default function InventoryPage() {
 
           <div className="flex flex-col items-end gap-4">
             <div className="flex bg-white p-1.5 rounded-2xl shadow-sm border border-border/50">
-              {(["USD", "GHS"] as Currency[]).map((cur) => (
+              {(["GHS", "USD"] as Currency[]).map((cur) => (
                 <button
                   key={cur}
                   onClick={() => setCurrency(cur)}

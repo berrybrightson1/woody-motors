@@ -18,7 +18,7 @@ interface InventoryCardProps {
     exchangeRate?: number
 }
 
-export function InventoryCard({ vehicle, currency = "USD", exchangeRate = 15.0 }: InventoryCardProps) {
+export function InventoryCard({ vehicle, currency = "GHS", exchangeRate = 15.0 }: InventoryCardProps) {
     const { isLiked, toggleLike } = useGarageStore()
     const liked = isLiked(vehicle.id)
     const [showMonthly, setShowMonthly] = useState(false)

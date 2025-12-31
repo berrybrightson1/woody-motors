@@ -146,16 +146,16 @@ export default function NewPartPage() {
     return (
         <div className="flex flex-col min-h-full">
             {/* Header */}
-            <header className="p-8 flex items-center gap-6">
+            <header className="p-4 md:p-8 flex items-center gap-4 md:gap-6">
                 <Button variant="ghost" size="icon" asChild className="rounded-full bg-white/5 hover:bg-white/10 text-white">
                     <Link href="/admin/parts">
                         <ArrowLeft className="w-5 h-5" />
                     </Link>
                 </Button>
-                <h1 className="text-2xl font-black text-white tracking-tight">Parts Creator Studio</h1>
+                <h1 className="text-lg md:text-2xl font-black text-white tracking-tight">Parts Creator Studio</h1>
             </header>
 
-            <main className="flex-1 px-8 md:px-12 pb-12 space-y-12">
+            <main className="flex-1 px-4 md:px-12 pb-12 space-y-8 md:space-y-12">
                 {/* Step 1: Visuals */}
                 <section className="space-y-6">
                     <div className="flex justify-between items-end">
@@ -174,7 +174,7 @@ export default function NewPartPage() {
                             className="hidden"
                         />
                         {images.map((img, idx) => (
-                            <div key={idx} className="aspect-square bg-[#222222] rounded-[2rem] relative overflow-hidden group border border-white/5 shadow-xl">
+                            <div key={idx} className="aspect-[4/3] md:aspect-square bg-[#222222] rounded-2xl md:rounded-[2rem] relative overflow-hidden group border border-white/5 shadow-xl">
                                 <img src={img} alt={`Preview ${idx}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                 <button
                                     onClick={() => removeImage(idx)}
@@ -187,7 +187,7 @@ export default function NewPartPage() {
                         {images.length < 5 && (
                             <button
                                 onClick={handleAddVisualClick}
-                                className="aspect-square bg-white/5 rounded-[2rem] border-2 border-dashed border-white/10 flex flex-col items-center justify-center gap-3 group cursor-pointer hover:bg-white/10 hover:border-primary/50 transition-all"
+                                className="aspect-[4/3] md:aspect-square bg-white/5 rounded-2xl md:rounded-[2rem] border-2 border-dashed border-white/10 flex flex-col items-center justify-center gap-3 group cursor-pointer hover:bg-white/10 hover:border-primary/50 transition-all"
                             >
                                 <div className="p-4 bg-white/5 rounded-full group-hover:scale-110 transition-transform">
                                     <ImagePlus className="w-8 h-8 text-white/40 group-hover:text-primary transition-colors" />
@@ -210,7 +210,7 @@ export default function NewPartPage() {
                                 value={name}
                                 onChange={e => setName(e.target.value)}
                                 placeholder="e.g. Ceramic Brake Pads"
-                                className="rounded-2xl bg-white/5 border-white/5 h-14 text-white font-bold px-6 focus:bg-white/10 transition-colors"
+                                className="rounded-xl md:rounded-2xl bg-white/5 border-white/5 h-12 md:h-14 text-white font-bold px-4 md:px-6 focus:bg-white/10 transition-colors text-base"
                             />
                         </div>
                         <div className="space-y-2">
