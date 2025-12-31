@@ -23,48 +23,7 @@ type Booking = {
     created_at: string
 }
 
-// Demo bookings when database is not configured
-const demoBookings: Booking[] = [
-    {
-        id: "demo-1",
-        customer_name: "John Mensah",
-        customer_email: "john@example.com",
-        customer_phone: "+233 24 123 4567",
-        vehicle_details: "2024 Mercedes-Benz S-Class",
-        service_type: "oil_change",
-        booking_date: "2025-01-05",
-        booking_time: "10:00",
-        notes: "Regular oil change and filter replacement. Also check the brake pads.",
-        status: "pending",
-        created_at: "2024-12-28T10:00:00Z"
-    },
-    {
-        id: "demo-2",
-        customer_name: "Ama Serwaa",
-        customer_email: "ama@example.com",
-        customer_phone: "+233 20 987 6543",
-        vehicle_details: "2023 BMW 7 Series",
-        service_type: "inspection",
-        booking_date: "2025-01-06",
-        booking_time: "14:30",
-        notes: "Full vehicle inspection before a road trip. Check suspension and tires.",
-        status: "confirmed",
-        created_at: "2024-12-27T15:30:00Z"
-    },
-    {
-        id: "demo-3",
-        customer_name: "Kwame Asante",
-        customer_email: "kwame@example.com",
-        customer_phone: "+233 27 555 1234",
-        vehicle_details: "2024 Range Rover Sport",
-        service_type: "ac_climate",
-        booking_date: "2025-01-07",
-        booking_time: "09:00",
-        notes: "AC not cooling properly. Strange noise when turned on.",
-        status: "pending",
-        created_at: "2024-12-28T08:00:00Z"
-    },
-]
+// Demo data removed for production
 
 const SERVICE_LABELS: Record<string, string> = {
     oil_change: "Premium Oil Service",
@@ -98,11 +57,9 @@ export default function AdminBookingsPage() {
         const supabase = createClient()
 
         async function fetchBookings() {
-            if (!supabase) {
-                toast.error("Database not configured")
-                setLoading(false)
-                return
-            }
+            toast.error("Database not configured")
+            setLoading(false)
+            return
 
             let query = supabase.from("service_bookings").select("*").order("created_at", { ascending: false })
 

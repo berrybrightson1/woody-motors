@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 import { getStoredVehicles, type Vehicle } from "@/lib/local-storage"
-import { DEMO_VEHICLES } from "@/lib/demo-data"
+
 
 export function NewArrivalsCarousel({ vehicles }: { vehicles: Vehicle[] }) {
   // Use demo vehicles if no real data available
@@ -18,7 +18,7 @@ export function NewArrivalsCarousel({ vehicles }: { vehicles: Vehicle[] }) {
   React.useEffect(() => {
     if (vehicles.length === 0) {
       const stored = getStoredVehicles()
-      setDisplayVehicles(stored.length > 0 ? stored : DEMO_VEHICLES)
+      setDisplayVehicles(stored)
     } else {
       setDisplayVehicles(vehicles)
     }

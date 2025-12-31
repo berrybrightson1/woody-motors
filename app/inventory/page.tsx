@@ -6,7 +6,6 @@ import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { getStoredVehicles, type Vehicle } from "@/lib/local-storage"
 import { InventoryCard } from "@/components/inventory-card"
-import { DEMO_VEHICLES } from "@/lib/demo-data"
 
 type Currency = "USD" | "GHS"
 
@@ -40,7 +39,7 @@ export default function InventoryPage() {
       if (!supabase) {
         let allVehicles = [...stored]
         if (allVehicles.length === 0) {
-          allVehicles = [...DEMO_VEHICLES]
+          // Empty state handled by UI
         }
 
         if (conditionFilter !== "all") {
@@ -58,7 +57,7 @@ export default function InventoryPage() {
       if (!data || data.length === 0) {
         let allVehicles = [...stored]
         if (allVehicles.length === 0) {
-          allVehicles = [...DEMO_VEHICLES]
+          // Empty state handled by UI
         }
 
         if (conditionFilter !== "all") {

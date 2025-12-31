@@ -35,51 +35,7 @@ type Vehicle = {
     view_count?: number
 }
 
-const demoVehicles: Vehicle[] = [
-    {
-        id: "demo-1",
-        make: "Mercedes-Benz",
-        model: "S-Class",
-        year: 2024,
-        price: 85000,
-        mileage: 12000,
-        transmission: "Automatic",
-        fuel_type: "Petrol",
-        condition: "brand_new",
-        is_duty_paid: true,
-        vin_verified: true,
-        images: [
-            "/luxury-car-showroom.png",
-            "/car-front.png",
-            "/luxury-car-shot-.jpg",
-            "/luxury-car-showroom.png",
-            "/car-front.png"
-        ],
-        features: ["Panoramic Sunroof", "Burmester Sound", "Massage Seats", "Heads-up Display"]
-    },
-    {
-        id: "demo-2",
-        make: "BMW",
-        model: "7 Series",
-        year: 2023,
-        price: 72000,
-        mileage: 28000,
-        transmission: "Automatic",
-        fuel_type: "Diesel",
-        condition: "foreign_used",
-        is_duty_paid: true,
-        vin_verified: true,
-        images: [
-            "/car-front.png",
-            "/luxury-car-showroom.png",
-            "/luxury-car-shot-.jpg",
-            "/car-front.png",
-            "/luxury-car-showroom.png"
-        ],
-        features: ["Executive Lounge", "Theatre Screen", "Laser Lights"]
-    },
-    // Add other demos locally for fallback matching
-]
+// Demo data removed for production
 
 export default function VehicleDetailsPage() {
     const params = useParams()
@@ -129,13 +85,7 @@ export default function VehicleDetailsPage() {
         async function fetchVehicle() {
             const id = params.id as string
 
-            // 1. Check hardcoded demos
-            const demo = demoVehicles.find(v => v.id === id)
-            if (demo) {
-                setVehicle(demo)
-                setLoading(false)
-                return
-            }
+            // 1. Check hardcoded demos - REMOVED for production
 
             // 2. Check local storage (newly published vehicles)
             const storedVehicles = getStoredVehicles()

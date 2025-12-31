@@ -39,24 +39,14 @@ function BuyNowForm() {
     useEffect(() => {
         async function fetchVehicles() {
             // Mock data for fallback
-            const mockVehicles = [
-                { id: "1", make: "Mercedes-Benz", model: "S-Class", year: 2024 },
-                { id: "2", make: "BMW", model: "7 Series", year: 2023 },
-                { id: "3", make: "Lexus", model: "LX 600", year: 2024 },
-                { id: "4", make: "Range Rover", model: "Sport", year: 2023 },
-                { id: "5", make: "Toyota", model: "Land Cruiser", year: 2024 },
-            ]
+            // Mock data removed for production
 
             const supabaseClient = createClient()
             if (supabaseClient) {
                 const { data } = await supabaseClient.from("vehicles").select("id, make, model, year")
                 if (data && data.length > 0) {
                     setVehicles(data)
-                } else {
-                    setVehicles(mockVehicles)
                 }
-            } else {
-                setVehicles(mockVehicles)
             }
         }
         fetchVehicles()
