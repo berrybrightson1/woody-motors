@@ -57,14 +57,14 @@ export function PartCategoryFilter({
     return (
         <div className="space-y-8">
             {/* Header */}
-            <div className="flex items-center justify-between">
-                <h3 className="text-white font-bold text-lg">Filters</h3>
+            <div className="flex items-center justify-between pb-4 border-b border-white/5">
+                <h3 className="text-white font-black text-xl tracking-tight">Filters</h3>
                 {(selectedCategories.length > 0 || priceRange[0] > 0 || showInStockOnly) && (
                     <Button
                         variant="ghost"
                         size="sm"
                         onClick={onClearFilters}
-                        className="text-white/40 hover:text-white h-auto p-0 text-xs"
+                        className="text-primary hover:text-primary/80 hover:bg-primary/10 h-8 px-3 text-xs font-bold uppercase tracking-wider rounded-lg"
                     >
                         Clear All
                     </Button>
@@ -114,7 +114,7 @@ export function PartCategoryFilter({
             </div>
 
             {/* Price Range */}
-            <div className="space-y-4">
+            <div className="space-y-4 px-1">
                 <div className="flex items-center justify-between">
                     <h4 className="text-sm font-bold text-white/60 uppercase tracking-wider">Price Range</h4>
                     <span className="text-xs text-white/40">Up to {priceRange[0].toLocaleString()} GHS</span>
@@ -125,7 +125,7 @@ export function PartCategoryFilter({
                     step={100}
                     value={priceRange}
                     onValueChange={setPriceRange}
-                    className="my-4"
+                    className="my-6 cursor-pointer"
                 />
             </div>
         </div>

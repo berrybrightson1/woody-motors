@@ -138,8 +138,8 @@ export default function PartsPage() {
                                             <SlidersHorizontal className="w-4 h-4" /> Filters
                                         </Button>
                                     </SheetTrigger>
-                                    <SheetContent side="left" className="bg-[#1A1A1A] border-white/10 text-white overflow-y-auto">
-                                        <div className="mt-6">
+                                    <SheetContent side="left" className="bg-[#1A1A1A] border-white/10 text-white overflow-y-auto p-6 md:p-8 w-[350px]">
+                                        <div className="mt-2">
                                             <PartCategoryFilter
                                                 selectedCategories={selectedCategories}
                                                 setSelectedCategories={setSelectedCategories}
