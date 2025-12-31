@@ -129,15 +129,7 @@ export default function NewInventoryPage() {
   const handlePublish = async () => {
     setPublishing(true)
 
-    // STRICT MODE: Real Database Only
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-      toast.error("Database Not Configured", {
-        description: "Add NEXT_PUBLIC_SUPABASE_URL to your .env file",
-        className: "bg-red-500 border-none text-white font-bold",
-      })
-      setPublishing(false)
-      return
-    }
+
 
     try {
       if (!supabase) throw new Error("Supabase client not initialized")
