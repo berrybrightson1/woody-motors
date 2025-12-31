@@ -230,7 +230,7 @@ export default function NewInventoryPage() {
                 <button
                   onClick={() => removeImage(idx)}
                   title="Remove image"
-                  className="absolute top-3 right-3 p-2 bg-black/60 rounded-full text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all hover:bg-primary"
+                  className="absolute top-3 right-3 p-2 bg-black/60 rounded-full text-white backdrop-blur-md opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all hover:bg-primary"
                 >
                   <X className="w-4 h-4" />
                 </button>

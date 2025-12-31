@@ -179,7 +179,7 @@ export default function NewPartPage() {
                                 <img src={img} alt={`Preview ${idx}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                 <button
                                     onClick={() => removeImage(idx)}
-                                    className="absolute top-3 right-3 p-2 bg-black/60 rounded-full text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all hover:bg-primary"
+                                    className="absolute top-3 right-3 p-2 bg-black/60 rounded-full text-white backdrop-blur-md opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all hover:bg-primary"
                                 >
                                     <X className="w-4 h-4" />
                                 </button>
