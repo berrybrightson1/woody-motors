@@ -133,18 +133,17 @@ function NewBookingForm() {
     <div className="min-h-screen flex bg-white">
       {/* Left Side - Image Placeholder */}
       <div className="hidden lg:block w-1/2 relative bg-zinc-900 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-black opacity-90" />
-        <div className="absolute inset-0 flex items-center justify-center p-12">
-          <div className="text-center space-y-6 max-w-lg">
-            <h2 className="text-4xl font-black text-white uppercase tracking-tighter">
-              World Class <br /> <span className="text-[#F58220]">Service Center</span>
-            </h2>
-            <p className="text-zinc-400 text-lg">
-              Experience premium maintenance for your premium vehicle. certified technicians, genuine parts, and white-glove service.
-            </p>
-          </div>
-        </div>
-        {/* Placeholder for actual image: <img src="/garage.jpg" className="absolute inset-0 w-full h-full object-cover -z-10" /> */}
+        {/* USER: Replace '/service-booking.jpg' with your actual uploaded image path in your public folder */}
+        <img
+          src="/service-booking.jpg"
+          alt="Service Center"
+          className="absolute inset-0 w-full h-full object-cover"
+          onError={(e) => {
+            // Fallback placeholder if your image isn't uploaded yet
+            e.currentTarget.src = "https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?q=80&w=2670&auto=format&fit=crop"
+          }}
+        />
+        <div className="absolute inset-0 bg-black/10" />
       </div>
 
       {/* Right Side - Form */}
