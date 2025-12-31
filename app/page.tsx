@@ -147,10 +147,10 @@ export default async function HomePage() {
             <Badge className="bg-primary/20 text-primary border-none text-xs px-4 py-1 rounded-full uppercase font-black tracking-widest mb-6">
               Elite Fleet Solutions
             </Badge>
-            <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter uppercase italic">
+            <h2 className="text-3xl md:text-6xl font-black mb-4 md:mb-6 tracking-tighter uppercase italic">
               Woody <span className="text-primary">Uber</span> Fleet.
             </h2>
-            <p className="text-white/60 font-medium text-lg">
+            <p className="text-white/60 font-medium text-sm md:text-lg max-w-xs mx-auto md:max-w-3xl">
               Premium branded vehicles ready for professional service. Apply to join the elite fleet below.
             </p>
           </div>
@@ -164,12 +164,12 @@ export default async function HomePage() {
                   className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-700 flex flex-col items-center justify-end pb-6 p-4 text-center">
-                  <h4 className="text-white font-bold text-lg mb-2 tracking-wide uppercase">
+                  <h4 className="text-white font-bold text-base md:text-lg mb-2 tracking-wide uppercase">
                     Ready to Drive?
                   </h4>
                   <DriverApplicationForm
                     trigger={
-                      <Button className="rounded-full bg-primary text-white font-bold px-6 py-4 text-sm uppercase tracking-widest hover:scale-105 transition-transform shadow-lg shadow-primary/20 w-full">
+                      <Button className="rounded-full bg-primary text-white font-bold px-4 py-3 text-xs md:text-sm uppercase tracking-widest hover:scale-105 transition-transform shadow-lg shadow-primary/20 w-full">
                         Apply Now
                       </Button>
                     }
