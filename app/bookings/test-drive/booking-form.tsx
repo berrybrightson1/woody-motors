@@ -12,7 +12,7 @@ import { MapPin, CheckCircle2, Car, Calendar, Clock, Phone, User, Settings2, Arr
 import { useSearchParams, useRouter } from "next/navigation"
 import { toast } from "sonner"
 
-import { getStoredVehicles, type Vehicle } from "@/lib/local-storage"
+import type { Vehicle } from "@/lib/types"
 
 export default function BookingForm() {
   const router = useRouter()
@@ -32,21 +32,18 @@ export default function BookingForm() {
     time: "",
   })
 
-  // Demo vehicles for fallback
-  const demoVehicles: Vehicle[] = []
+  // Demo vehicles removed for production
 
   useEffect(() => {
     async function fetchVehicles() {
-      const stored = getStoredVehicles()
-
       if (!supabase) {
-        setVehicles([...stored, ...demoVehicles])
+        setVehicles([])
         return
       }
       const { data, error } = await supabase.from("vehicles").select("id, make, model, year").eq("status", "available")
 
       if (error || !data || data.length === 0) {
-        setVehicles([...stored, ...demoVehicles])
+        setVehicles([])
       } else {
         setVehicles(data as any)
       }

@@ -8,7 +8,7 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { useGarageStore } from "@/store/garage-store"
 import { toast } from "sonner"
-import type { Vehicle } from "@/lib/local-storage"
+import type { Vehicle } from "@/lib/types"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 

@@ -13,27 +13,9 @@ import Link from "next/link"
 import useEmblaCarousel from "embla-carousel-react"
 import Autoplay from "embla-carousel-autoplay"
 import { PartsCard } from "@/components/parts-card"
-import { SparePart } from "@/lib/types"
+import { type Vehicle, type SparePart } from "@/lib/types"
 
-import { getStoredVehicles } from "@/lib/local-storage"
 
-type Vehicle = {
-    id: string
-    make: string
-    model: string
-    year: number
-    price: number
-    mileage: number
-    transmission: string
-    fuel_type: string
-    condition: "foreign_used" | "brand_new"
-    is_duty_paid: boolean
-    vin_verified: boolean
-    images: string[]
-    description?: string
-    features?: string[]
-    view_count?: number
-}
 
 // Demo data removed for production
 
@@ -87,21 +69,7 @@ export default function VehicleDetailsPage() {
 
             // 1. Check hardcoded demos - REMOVED for production
 
-            // 2. Check local storage (newly published vehicles)
-            const storedVehicles = getStoredVehicles()
-            // @ts-ignore - Local storage vehicle type might slightly differ but is compatible for display
-            const localMatch = storedVehicles.find(v => v.id === id)
-
-            if (localMatch) {
-                setVehicle({
-                    ...localMatch,
-                    // Ensure mandatory fields for this view are present
-                    condition: localMatch.condition as "foreign_used" | "brand_new",
-                    features: [] // Default features as empty for local vehicles
-                })
-                setLoading(false)
-                return
-            }
+            // 2. Check local storage - REMOVED for production
 
             // 3. Fetch from Supabase (Real DB)
             const supabase = createClient()

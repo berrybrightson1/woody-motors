@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Plus, LayoutDashboard, Car, Settings, LogOut, ArrowRight, Calendar, Wrench } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { getStoredVehicles } from "@/lib/local-storage"
+import { type Vehicle } from "@/lib/types"
 import { createClient } from "@/lib/supabase/client"
 
 export default function AdminDashboard() {

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { Vehicle } from '@/lib/local-storage'
+import { Vehicle } from '@/lib/types'
 
 interface GarageStore {
     likedVehicles: Vehicle[]
