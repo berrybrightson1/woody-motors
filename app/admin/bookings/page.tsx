@@ -57,10 +57,6 @@ export default function AdminBookingsPage() {
         const supabase = createClient()
 
         async function fetchBookings() {
-            toast.error("Database not configured")
-            setLoading(false)
-            return
-
             let query = supabase.from("service_bookings").select("*").order("created_at", { ascending: false })
 
             if (filter !== "all") {
