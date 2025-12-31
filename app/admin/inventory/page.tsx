@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Plus, ArrowLeft, Trash2, Edit, X, Check } from "lucide-react"
 import Link from "next/link"
 import { getStoredVehicles, deleteStoredVehicle, type Vehicle } from "@/lib/local-storage"
-import { DEMO_VEHICLES } from "@/lib/demo-data"
+
 import { toast } from "sonner"
 
 export default function AdminInventoryPage() {
