@@ -113,6 +113,15 @@ export function InventoryCard({ vehicle, currency = "GHS", exchangeRate = 15.0 }
                         </Badge>
                     )}
                 </div>
+
+                {/* SOLD Overlay */}
+                {vehicle.status?.toLowerCase() === "sold" && (
+                    <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+                        <span className="bg-red-600/90 text-white font-black text-2xl px-6 py-2 rounded-xl transform -rotate-12 border-4 border-white/20 shadow-2xl backdrop-blur-md">
+                            SOLD
+                        </span>
+                    </div>
+                )}
             </Link>
 
             <div className="p-8 pt-6">
@@ -193,14 +202,21 @@ export function InventoryCard({ vehicle, currency = "GHS", exchangeRate = 15.0 }
                 <Button
                     asChild
                     variant="outline"
-                    className="w-full h-14 rounded-2xl border-2 border-secondary/10 hover:border-primary hover:bg-primary hover:text-white transition-all group/btn bg-transparent"
+                    className={`w-full h-14 rounded-2xl border-2 transition-all group/btn bg-transparent ${vehicle.status?.toLowerCase() === "sold"
+                            ? "border-red-500/50 hover:bg-red-500 hover:border-red-500 hover:text-white text-red-600"
+                            : "border-green-500/30 hover:border-green-500 hover:bg-green-500 hover:text-white text-green-600"
+                        }`}
                 >
                     <Link
                         href={`/inventory/${vehicle.id}`}
                         className="flex items-center justify-center gap-2"
                     >
-                        <span className="font-black uppercase tracking-widest text-xs">View Details</span>
-                        <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                        <span className="font-black uppercase tracking-widest text-xs">
+                            {vehicle.status?.toLowerCase() === "sold" ? "Sold" : "Available"}
+                        </span>
+                        {vehicle.status?.toLowerCase() !== "sold" && (
+                            <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                        )}
                     </Link>
                 </Button>
             </div>

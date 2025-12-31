@@ -59,53 +59,48 @@ function BuyNowForm() {
 
         const formData = new FormData(e.currentTarget)
 
-        if (!supabase) {
-            // Fallback for demo mode if no supabase
-            setTimeout(() => {
-                router.push("/bookings/success")
-            }, 1500)
-            return
+        // HYBRID FLOW: Database Save (Best Effort) -> WhatsApp Redirect
+        const whatsappNumber = "+233551171353"
+
+        // Construct message with newlines (\n) and formatting
+        const rawMessage = `*New Purchase Inquiry* 🚗\n\n*Vehicle:* ${formData.get("vehicle")}\n*Customer:* ${name}\n*Email:* ${email}\n*Phone:* ${phone}\n*Payment:* ${formData.get("payment_method")}\n\n*Message:* ${notes}`
+
+        // Encode properly for URL
+        const whatsappUrl = `https://wa.me/${whatsappNumber.replace('+', '')}?text=${encodeURIComponent(rawMessage)}`
+
+        try {
+            if (supabase) {
+                const { error: insertError } = await supabase.from("service_bookings").insert({
+                    customer_name: name,
+                    customer_email: email,
+                    customer_phone: phone,
+                    vehicle_details: formData.get("vehicle") as string,
+                    service_type: "PURCHASE_INQUIRY",
+                    booking_date: formData.get("date") as string || new Date().toISOString().split('T')[0], // Fallback to today if missing
+                    booking_time: formData.get("time") as string || "09:00", // Fallback Default
+                    notes: `Payment Method: ${formData.get("payment_method")}\n\nNotes: ${notes}`,
+                })
+
+                if (insertError) {
+                    console.error("Background DB save failed (proceeding to WhatsApp):", insertError)
+                }
+            } else {
+                console.warn("Supabase client not initialized - skipping DB save")
+            }
+        } catch (err) {
+            console.error("Unexpected DB error:", err)
         }
 
-        // Reuse service_bookings or create a new table? 
-        // For now, reusing service_bookings with "Purchase Inquiry" as service_type
-        // A production app would likely have a separate 'leads' or 'orders' table.
-
-        const { error: insertError } = await supabase.from("service_bookings").insert({
-            customer_name: name,
-            customer_email: email,
-            customer_phone: phone,
-            vehicle_details: formData.get("vehicle") as string,
-            service_type: "PURCHASE_INQUIRY",
-            booking_date: formData.get("date") as string,
-            booking_time: formData.get("time") as string,
-            notes: `Payment Method: ${formData.get("payment_method")}\n\nNotes: ${notes}`,
+        // Always succeed to user
+        toast.success("Inquiry Prepared!", {
+            description: "Opening WhatsApp to send your request...",
+            duration: 2000
         })
 
-        if (insertError) {
-            console.error("Error submitting inquiry:", insertError)
-            toast.error("Submission Failed", { description: "Please try again or contact us directly." })
-            setLoading(false)
-        } else {
-            // HYBRID FLOW: Database Save -> WhatsApp Redirect
-            const whatsappNumber = "+233551171353"
-
-            // Construct message with newlines (\n) and formatting
-            const rawMessage = `*New Purchase Inquiry* 🚗\n\n*Vehicle:* ${formData.get("vehicle")}\n*Customer:* ${name}\n*Phone:* ${phone}\n*Payment:* ${formData.get("payment_method")}\n\n*Message:* ${notes}`
-
-            // Encode properly for URL
-            const whatsappUrl = `https://wa.me/${whatsappNumber.replace('+', '')}?text=${encodeURIComponent(rawMessage)}`
-
-            toast.success("Inquiry Saved!", {
-                description: "Opening WhatsApp...",
-                duration: 2000
-            })
-
-            // Brief delay to allow the toast to appear, then redirect
-            setTimeout(() => {
-                window.location.href = whatsappUrl
-            }, 1000)
-        }
+        // Redirect
+        setTimeout(() => {
+            window.location.href = whatsappUrl
+        }, 1500)
     }
 
     return (
