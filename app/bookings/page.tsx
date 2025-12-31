@@ -130,187 +130,205 @@ function NewBookingForm() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fafafa] pt-20 pb-12 px-4">
-      <div className="max-w-2xl mx-auto">
-        <Card className="border-none shadow-2xl rounded-3xl overflow-hidden">
+    <div className="min-h-screen flex bg-white">
+      {/* Left Side - Image Placeholder */}
+      <div className="hidden lg:block w-1/2 relative bg-zinc-900 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-black opacity-90" />
+        <div className="absolute inset-0 flex items-center justify-center p-12">
+          <div className="text-center space-y-6 max-w-lg">
+            <h2 className="text-4xl font-black text-white uppercase tracking-tighter">
+              World Class <br /> <span className="text-[#F58220]">Service Center</span>
+            </h2>
+            <p className="text-zinc-400 text-lg">
+              Experience premium maintenance for your premium vehicle. certified technicians, genuine parts, and white-glove service.
+            </p>
+          </div>
+        </div>
+        {/* Placeholder for actual image: <img src="/garage.jpg" className="absolute inset-0 w-full h-full object-cover -z-10" /> */}
+      </div>
+
+      {/* Right Side - Form */}
+      <div className="w-full lg:w-1/2 h-screen overflow-y-auto bg-[#fafafa]">
+        <div className="max-w-2xl mx-auto py-12 px-6 lg:px-12">
           {/* Header */}
-          {/* Header */}
-          <div className="bg-white p-8 border-b border-gray-100 flex flex-col items-start text-left">
+          <div className="mb-8">
             <Button
               variant="ghost"
               onClick={() => router.back()}
-              className="hover:bg-black/5 text-muted-foreground pl-0 -ml-3 mb-6 h-auto py-2"
+              className="hover:bg-transparent text-muted-foreground pl-0 -ml-3 mb-6 h-auto py-2 hover:text-primary transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" /> Back
             </Button>
-            <h1 className="text-4xl font-bold text-secondary mb-2">Schedule Service</h1>
-            <p className="text-secondary/60 text-lg">Book your premium maintenance or test drive session</p>
+            <h1 className="text-4xl font-black text-secondary mb-2 uppercase tracking-tight">Schedule Service</h1>
+            <p className="text-secondary/60 text-lg">Book your premium maintenance or test drive session.</p>
           </div>
 
-          {/* Form */}
-          <CardContent className="p-8 bg-white">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  className="rounded-xl h-12"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="border-none shadow-none bg-transparent p-0">
+            <CardContent className="p-0">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Form fields remain same, just removing extra padding wrappers since parent handles it */}
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
+                  <Label htmlFor="name">Full Name</Label>
                   <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="john@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="name"
+                    name="name"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
-                    className="rounded-xl h-12"
+                    className="rounded-xl h-14 bg-white border-zinc-200 focus:ring-[#F58220]"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    placeholder="+1 (555) 000-0000"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                    className="rounded-xl h-12"
-                  />
-                </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="vehicle">Select Vehicle</Label>
-                <Select name="vehicle" required value={selectedVehicle} onValueChange={setSelectedVehicle}>
-                  <SelectTrigger className="rounded-xl h-12 bg-white border-border">
-                    <SelectValue placeholder="Select a vehicle" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="custom">Other / Not Listed</SelectItem>
-                    {vehicles.map((v) => (
-                      <SelectItem key={v.id} value={`${v.year} ${v.make} ${v.model}`}>
-                        {v.year} {v.make} {v.model}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="service">Service Type</Label>
-                <Select name="service" required>
-                  <SelectTrigger className="rounded-xl h-12">
-                    <SelectValue placeholder="Select service" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="oil_change">Premium Oil Service</SelectItem>
-                    <SelectItem value="inspection">Comprehensive Inspection</SelectItem>
-                    <SelectItem value="test_drive">Test Drive Session</SelectItem>
-                    <SelectItem value="repair">Major Repair</SelectItem>
-                    <SelectItem value="brake_service">Brake Service</SelectItem>
-                    <SelectItem value="transmission">Transmission Service</SelectItem>
-                    <SelectItem value="ac_climate">AC / Climate Control</SelectItem>
-                    <SelectItem value="electrical">Electrical Diagnostics</SelectItem>
-                    <SelectItem value="bodywork">Body Work & Paint</SelectItem>
-                    <SelectItem value="alignment">Wheel Alignment</SelectItem>
-                    <SelectItem value="tire_service">Tire Service</SelectItem>
-                    <SelectItem value="detailing">Full Detailing</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="date">Preferred Date</Label>
-                  <div className="relative">
-                    <Input id="date" name="date" type="date" required className="rounded-xl h-12 pl-10" />
-                    <CalendarIcon className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="john@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="rounded-xl h-14 bg-white"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="+1 (555) 000-0000"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      required
+                      className="rounded-xl h-14 bg-white"
+                    />
                   </div>
                 </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="time">Preferred Time</Label>
-                  <div className="relative">
-                    <Input id="time" name="time" type="time" required className="rounded-xl h-12 pl-10" />
-                    <Clock className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
+                  <Label htmlFor="vehicle">Select Vehicle</Label>
+                  <Select name="vehicle" required value={selectedVehicle} onValueChange={setSelectedVehicle}>
+                    <SelectTrigger className="rounded-xl h-14 bg-white border-zinc-200">
+                      <SelectValue placeholder="Select a vehicle" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="custom">Other / Not Listed</SelectItem>
+                      {vehicles.map((v) => (
+                        <SelectItem key={v.id} value={`${v.year} ${v.make} ${v.model}`}>
+                          {v.year} {v.make} {v.model}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="service">Service Type</Label>
+                  <Select name="service" required>
+                    <SelectTrigger className="rounded-xl h-14 bg-white border-zinc-200">
+                      <SelectValue placeholder="Select service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="oil_change">Premium Oil Service</SelectItem>
+                      <SelectItem value="inspection">Comprehensive Inspection</SelectItem>
+                      <SelectItem value="test_drive">Test Drive Session</SelectItem>
+                      <SelectItem value="repair">Major Repair</SelectItem>
+                      <SelectItem value="brake_service">Brake Service</SelectItem>
+                      <SelectItem value="transmission">Transmission Service</SelectItem>
+                      <SelectItem value="ac_climate">AC / Climate Control</SelectItem>
+                      <SelectItem value="electrical">Electrical Diagnostics</SelectItem>
+                      <SelectItem value="bodywork">Body Work & Paint</SelectItem>
+                      <SelectItem value="alignment">Wheel Alignment</SelectItem>
+                      <SelectItem value="tire_service">Tire Service</SelectItem>
+                      <SelectItem value="detailing">Full Detailing</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="date">Preferred Date</Label>
+                    <div className="relative">
+                      <Input id="date" name="date" type="date" required className="rounded-xl h-14 pl-10 bg-white" />
+                      <CalendarIcon className="absolute left-3 top-4 h-5 w-5 text-muted-foreground" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="time">Preferred Time</Label>
+                    <div className="relative">
+                      <Input id="time" name="time" type="time" required className="rounded-xl h-14 pl-10 bg-white" />
+                      <Clock className="absolute left-3 top-4 h-5 w-5 text-muted-foreground" />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="notes">Describe Your Problem</Label>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleVoiceInput}
-                    className={`gap-2 rounded-full px-4 h-8 ${isRecording ? "text-white bg-red-500 animate-pulse" : "text-muted-foreground hover:bg-primary/10 hover:text-primary"}`}
-                  >
-                    {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                    <span className="text-xs font-bold uppercase tracking-wider">
-                      {isRecording ? "Listening..." : "Use Voice"}
-                    </span>
-                  </Button>
-                </div>
-
-                {/* Quick Problem Suggestions */}
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    "Engine making strange noise",
-                    "Brakes squeaking",
-                    "AC not cooling",
-                    "Oil change needed",
-                    "Check engine light on",
-                  ].map((suggestion) => (
-                    <button
-                      key={suggestion}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="notes">Describe Your Problem</Label>
+                    <Button
                       type="button"
-                      onClick={() => setNotes((prev) => prev ? `${prev}. ${suggestion}` : suggestion)}
-                      className="px-3 py-1.5 text-xs font-medium bg-secondary/10 hover:bg-secondary/20 text-secondary rounded-full transition-colors border border-secondary/20"
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleVoiceInput}
+                      className={`gap-2 rounded-full px-4 h-8 transition-all ${isRecording ? "text-white bg-red-500 animate-pulse shadow-lg shadow-red-500/30" : "text-muted-foreground hover:bg-[#F58220]/10 hover:text-[#F58220]"}`}
                     >
-                      {suggestion}
-                    </button>
-                  ))}
+                      {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                      <span className="text-xs font-bold uppercase tracking-wider">
+                        {isRecording ? "Listening..." : "Use Voice"}
+                      </span>
+                    </Button>
+                  </div>
+
+                  {/* Quick Problem Suggestions */}
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      "Engine making strange noise",
+                      "Brakes squeaking",
+                      "AC not cooling",
+                      "Oil change needed",
+                      "Check engine light on",
+                    ].map((suggestion) => (
+                      <button
+                        key={suggestion}
+                        type="button"
+                        onClick={() => setNotes((prev) => prev ? `${prev}. ${suggestion}` : suggestion)}
+                        className="px-3 py-1.5 text-xs font-bold uppercase tracking-wide bg-white hover:bg-[#F58220] hover:text-white text-secondary/60 rounded-lg transition-all border border-border/50 shadow-sm"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+
+                  <Textarea
+                    id="notes"
+                    name="notes"
+                    placeholder="Click a suggestion above, use voice, or type your problem..."
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    className="rounded-xl min-h-[120px] bg-white border-zinc-200 focus:border-[#F58220] resize-none p-4"
+                  />
+
+                  {isRecording && (
+                    <p className="text-xs text-[#F58220] font-bold uppercase tracking-widest flex items-center gap-2 animate-pulse">
+                      <span className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
+                      Listening...
+                    </p>
+                  )}
                 </div>
 
-                <Textarea
-                  id="notes"
-                  name="notes"
-                  placeholder="Click a suggestion above, use voice, or type your problem..."
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  className="rounded-xl min-h-[100px]"
-                />
+                {error && <p className="text-sm text-destructive font-medium bg-red-50 p-3 rounded-lg border border-red-100">{error}</p>}
 
-                {isRecording && (
-                  <p className="text-xs text-primary animate-pulse flex items-center gap-2">
-                    <span className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
-                    Speak now... Your words will appear in the box above
-                  </p>
-                )}
-              </div>
-
-              {error && <p className="text-sm text-destructive font-medium">{error}</p>}
-
-              <Button type="submit" className="w-full h-14 rounded-xl text-xl font-bold mt-4" disabled={loading}>
-                {loading ? "Confirming Booking..." : "Request Appointment"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+                <Button type="submit" className="w-full h-14 rounded-xl text-lg font-black uppercase tracking-wide mt-8 bg-[#F58220] hover:bg-[#d97018] text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-[1.01] active:scale-[0.99]" disabled={loading}>
+                  {loading ? "Confirming Booking..." : "Request Appointment"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )

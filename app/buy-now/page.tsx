@@ -60,7 +60,7 @@ function BuyNowForm() {
         const formData = new FormData(e.currentTarget)
 
         // HYBRID FLOW: Database Save (Best Effort) -> WhatsApp Redirect
-        const whatsappNumber = "+233551171353"
+        const whatsappNumber = "+233249999065"
 
         // Construct message with newlines (\n) and formatting
         const rawMessage = `*New Purchase Inquiry* 🚗\n\n*Vehicle:* ${formData.get("vehicle")}\n*Customer:* ${name}\n*Email:* ${email}\n*Phone:* ${phone}\n*Payment:* ${formData.get("payment_method")}\n\n*Message:* ${notes}`
