@@ -52,30 +52,31 @@ export default function NewPartPage() {
         }
     }
 
-    const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files
         if (files && files.length > 0) {
+            setLoading(true)
             const newImages: string[] = []
             const fileArray = Array.from(files)
-            let processedCount = 0
 
-            fileArray.forEach((file) => {
-                if (images.length + newImages.length < 5) {
-                    const reader = new FileReader()
-                    reader.onloadend = () => {
-                        if (reader.result && typeof reader.result === 'string') {
-                            newImages.push(reader.result)
-                        }
-                        processedCount++
-                        if (processedCount === fileArray.length) {
-                            setImages(prev => [...prev, ...newImages])
-                        }
+            // Dynamic import to avoid SSR issues
+            const { compressImage } = await import("@/lib/utils")
+
+            try {
+                for (const file of fileArray) {
+                    if (images.length + newImages.length < 5) {
+                        const compressed = await compressImage(file)
+                        newImages.push(compressed)
                     }
-                    reader.readAsDataURL(file)
-                } else {
-                    processedCount++
                 }
-            })
+                setImages(prev => [...prev, ...newImages])
+                toast.success("Images compressed & added")
+            } catch (error) {
+                console.error("Compression failed:", error)
+                toast.error("Failed to process images")
+            } finally {
+                setLoading(false)
+            }
         }
         if (event.target) event.target.value = ''
     }
