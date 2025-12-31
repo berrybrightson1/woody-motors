@@ -20,11 +20,15 @@ export function Navigation() {
   ]
 
   return (
-    <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+    <nav className="bg-white/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-50 shadow-sm supports-[backdrop-filter]:bg-white/60">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link
+            href="/"
+            className="flex items-center gap-3 group"
+            onClick={() => setMobileMenuOpen(false)}
+          >
             <div className="bg-primary p-2.5 rounded-xl group-hover:bg-primary/90 transition-colors">
               <Car className="h-6 w-6 text-white" />
             </div>
@@ -33,20 +37,26 @@ export function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "px-4 py-2 rounded-xl font-bold transition-colors",
-                  pathname === item.href
-                    ? "bg-primary text-white"
-                    : "text-foreground hover:bg-muted hover:text-primary",
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = item.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(item.href)
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "px-4 py-2 rounded-xl font-bold transition-colors",
+                    isActive
+                      ? "bg-primary text-white"
+                      : "text-foreground hover:bg-muted hover:text-primary",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
           </div>
 
           {/* CTA Button (Desktop) */}
@@ -69,24 +79,31 @@ export function Navigation() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border">
+          <div className="md:hidden py-4 border-t border-border animate-in slide-in-from-top-2">
             <div className="flex flex-col gap-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "px-4 py-3 rounded-xl font-bold transition-colors",
-                    pathname === item.href
-                      ? "bg-primary text-white"
-                      : "text-foreground hover:bg-muted hover:text-primary",
-                  )}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <Button asChild className="rounded-xl font-bold mt-2" onClick={() => setMobileMenuOpen(false)}>
+              {navItems.map((item) => {
+                const isActive = item.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.href)
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      "px-4 py-3 rounded-xl font-bold transition-colors flex items-center justify-between group",
+                      isActive
+                        ? "bg-primary text-white"
+                        : "text-foreground hover:bg-muted hover:text-primary",
+                    )}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                    {isActive && <Car className="w-4 h-4 fill-current animate-pulse" />}
+                  </Link>
+                )
+              })}
+              <Button asChild className="rounded-xl font-bold mt-2 h-12" onClick={() => setMobileMenuOpen(false)}>
                 <Link href="/bookings">Get Started</Link>
               </Button>
             </div>

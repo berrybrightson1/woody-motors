@@ -46,6 +46,8 @@ export default async function HomePage() {
             src="/luxury-car-showroom.png"
             alt="Woody Motors Hero"
             className="w-full h-full object-cover"
+            fetchPriority="high" // Native priority hint
+            loading="eager"
           />
           <div className="absolute inset-0 bg-black/50" />
         </div>

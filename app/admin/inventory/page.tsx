@@ -153,9 +153,18 @@ export default function AdminInventoryPage() {
             {/* Vehicle List */}
             <div className="space-y-2">
                 {loading ? (
-                    <div className="text-center py-12 text-white/60">Loading vehicles...</div>
+                    <div className="text-center py-20 text-white/60">Loading vehicles...</div>
                 ) : vehicles.length === 0 ? (
-                    <div className="text-center py-12 text-white/60">No vehicles in inventory</div>
+                    <div className="text-center py-20 bg-[#1A1A1A] border border-dashed border-white/10 rounded-xl">
+                        <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Plus className="w-8 h-8 text-white/20" />
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">Inventory is Empty</h3>
+                        <p className="text-white/50 mb-6 max-w-sm mx-auto">Get started by adding your first vehicle to the inventory system.</p>
+                        <Button asChild className="bg-primary hover:bg-primary/90 text-white font-bold">
+                            <Link href="/admin/inventory/new">Post First Vehicle</Link>
+                        </Button>
+                    </div>
                 ) : (
                     vehicles.map((vehicle) => (
                         <Card key={vehicle.id} className="bg-[#141414] border-white/5 rounded-lg overflow-hidden hover:border-white/10 transition-colors">
@@ -184,7 +193,14 @@ export default function AdminInventoryPage() {
                                         <span>•</span>
                                         <span>{vehicle.condition === "brand_new" ? "Brand New" : "Foreign Used"}</span>
                                         <span>•</span>
-                                        <span>{new Date(vehicle.created_at || Date.now()).toLocaleDateString()}</span>
+                                        <span>{new Date(vehicle.created_at || Date.now()).toLocaleString("en-US", {
+                                            month: "numeric",
+                                            day: "numeric",
+                                            year: "numeric",
+                                            hour: "numeric",
+                                            minute: "2-digit",
+                                            hour12: true
+                                        })}</span>
                                     </div>
                                 </div>
 

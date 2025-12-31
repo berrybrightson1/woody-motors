@@ -10,17 +10,27 @@ import { createClient } from "@/lib/supabase/client"
 
 export default function AdminDashboard() {
   const [inventoryCount, setInventoryCount] = useState(0)
+  const [bookingsCount, setBookingsCount] = useState(0)
 
   useEffect(() => {
     async function fetchStats() {
       const supabase = createClient()
       if (!supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) return
 
-      const { count } = await supabase
+      // Fetch Inventory
+      const { count: vehicles } = await supabase
         .from("vehicles")
         .select("*", { count: "exact", head: true })
 
-      if (count !== null) setInventoryCount(count)
+      if (vehicles !== null) setInventoryCount(vehicles)
+
+      // Fetch Bookings
+      const { count: bookings } = await supabase
+        .from("service_bookings")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "pending")
+
+      if (bookings !== null) setBookingsCount(bookings)
     }
 
     fetchStats()
@@ -63,7 +73,7 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-bold text-primary/80 uppercase tracking-wide">New Bookings</p>
-              <p className="text-4xl font-bold text-primary mt-2">0</p>
+              <p className="text-4xl font-bold text-primary mt-2">{bookingsCount}</p>
             </div>
             <div className="p-3 bg-primary/20 rounded-xl">
               <Calendar className="w-6 h-6 text-primary" />
