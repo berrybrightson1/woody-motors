@@ -163,14 +163,14 @@ export default async function HomePage() {
                   alt="Woody Uber Fleet"
                   className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-secondary/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-700 flex flex-col items-center justify-center p-6 text-center">
-                  <h4 className="text-primary font-black text-xl mb-4 tracking-tighter uppercase italic">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-700 flex flex-col items-center justify-end pb-8 p-6 text-center">
+                  <h4 className="text-white font-bold text-lg mb-3 tracking-wide uppercase">
                     Ready to Drive?
                   </h4>
                   <DriverApplicationForm
                     trigger={
-                      <Button className="rounded-full bg-primary text-white font-black px-8 py-6 text-lg hover:scale-110 transition-transform shadow-2xl shadow-primary/20">
-                        APPLY FOR FLEET
+                      <Button className="rounded-full bg-primary text-white font-bold px-6 py-5 text-sm uppercase tracking-widest hover:scale-105 transition-transform shadow-lg shadow-primary/20 w-full">
+                        Apply Now
                       </Button>
                     }
                   />
