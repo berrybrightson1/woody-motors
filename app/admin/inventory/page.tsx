@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Plus, ArrowLeft, Trash2, Edit, X, Check } from "lucide-react"
 import Link from "next/link"
-import { getStoredVehicles, deleteStoredVehicle, type Vehicle } from "@/lib/local-storage"
+import { type Vehicle } from "@/lib/types"
 
 import { toast } from "sonner"
 
@@ -24,10 +24,9 @@ export default function AdminInventoryPage() {
 
             // In demo mode or no supabase, strictly use local storage
             // avoiding hardcoded demoVehicles ensures "clean" dashboard
+            // Fallback removed. Strict DB only.
             if (!supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
-                const stored = getStoredVehicles()
-                setVehicles(stored.length > 0 ? stored : DEMO_VEHICLES)
-                setIsDemo(true)
+                toast.error("Database connection missing")
                 setLoading(false)
                 return
             }
@@ -49,14 +48,8 @@ export default function AdminInventoryPage() {
 
     const handleDelete = async (vehicleId: string) => {
         if (isDemo) {
-            // Optimistic delete
-            deleteStoredVehicle(vehicleId)
-            setVehicles(prev => prev.filter(v => v.id !== vehicleId))
-
-            toast.success("VEHICLE DELETED", {
-                description: "The vehicle was removed from inventory.",
-                className: "bg-red-500 border-none text-white font-bold"
-            })
+            toast.error("Cannot delete in demo mode")
+            return
         } else {
             const supabase = createClient()
             if (!supabase) return
@@ -77,15 +70,7 @@ export default function AdminInventoryPage() {
     }
 
     const handleStatusUpdate = async (vehicleId: string, newStatus: "available" | "sold") => {
-        if (isDemo) {
-            // Update demo data locally matches existing logic but misses persistence for status?
-            // For now, updating state is enough visual feedback.
-            setVehicles(prev => prev.map(v =>
-                v.id === vehicleId ? { ...v, status: newStatus } : v
-            ))
-            setEditingVehicle(null)
-            return
-        }
+        if (isDemo) return
 
         const supabase = createClient()
         if (!supabase) return

@@ -7,7 +7,7 @@ import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
-import { getStoredVehicles, type Vehicle } from "@/lib/local-storage"
+import { type Vehicle } from "@/lib/types"
 
 
 export function NewArrivalsCarousel({ vehicles }: { vehicles: Vehicle[] }) {
@@ -16,12 +16,7 @@ export function NewArrivalsCarousel({ vehicles }: { vehicles: Vehicle[] }) {
 
   // Hydrate from localStorage if no DB vehicles are passed
   React.useEffect(() => {
-    if (vehicles.length === 0) {
-      const stored = getStoredVehicles()
-      setDisplayVehicles(stored)
-    } else {
-      setDisplayVehicles(vehicles)
-    }
+    setDisplayVehicles(vehicles)
   }, [vehicles])
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", loop: true }, [

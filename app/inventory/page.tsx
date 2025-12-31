@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
-import { getStoredVehicles, type Vehicle } from "@/lib/local-storage"
+import { type Vehicle } from "@/lib/types" // Use shared type or define locally
 import { InventoryCard } from "@/components/inventory-card"
 
 type Currency = "USD" | "GHS"
@@ -33,19 +33,8 @@ export default function InventoryPage() {
   useEffect(() => {
     async function fetchVehicles() {
       const supabase = createClient()
-      const stored = getStoredVehicles()
-
-      // Use demo vehicles + stored if Supabase is not configured or empty
       if (!supabase) {
-        let allVehicles = [...stored]
-        if (allVehicles.length === 0) {
-          // Empty state handled by UI
-        }
-
-        if (conditionFilter !== "all") {
-          allVehicles = allVehicles.filter(v => v.condition === conditionFilter)
-        }
-        setVehicles(allVehicles)
+        setVehicles([])
         return
       }
 
@@ -54,19 +43,8 @@ export default function InventoryPage() {
       const { data } = await query
 
       // Use stored/demo vehicles if no data from database
-      if (!data || data.length === 0) {
-        let allVehicles = [...stored]
-        if (allVehicles.length === 0) {
-          // Empty state handled by UI
-        }
-
-        if (conditionFilter !== "all") {
-          allVehicles = allVehicles.filter(v => v.condition === conditionFilter)
-        }
-        setVehicles(allVehicles)
-      } else {
-        setVehicles(data)
-      }
+      // Strict DB usage
+      setVehicles(data || [])
     }
     fetchVehicles()
   }, [conditionFilter])
