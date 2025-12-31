@@ -6,16 +6,24 @@ import { Plus, LayoutDashboard, Car, Settings, LogOut, ArrowRight, Calendar, Wre
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { getStoredVehicles } from "@/lib/local-storage"
+import { createClient } from "@/lib/supabase/client"
 
 export default function AdminDashboard() {
   const [inventoryCount, setInventoryCount] = useState(0)
 
   useEffect(() => {
-    // Initial fetch
-    setInventoryCount(getStoredVehicles().length)
+    async function fetchStats() {
+      const supabase = createClient()
+      if (!supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) return
 
-    // Optional: could add an event listener for storage changes if desired,
-    // but simple mount fetch covers most "real time" needs for a single user tab.
+      const { count } = await supabase
+        .from("vehicles")
+        .select("*", { count: "exact", head: true })
+
+      if (count !== null) setInventoryCount(count)
+    }
+
+    fetchStats()
   }, [])
 
   return (

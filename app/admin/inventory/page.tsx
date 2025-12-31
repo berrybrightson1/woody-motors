@@ -59,8 +59,21 @@ export default function AdminInventoryPage() {
                 className: "bg-red-500 border-none text-white font-bold"
             })
         } else {
-            // Handle supabase delete if needed later
-            toast.error("Deletion only available in demo mode")
+            const supabase = createClient()
+            if (!supabase) return
+
+            const { error } = await supabase
+                .from("vehicles")
+                .delete()
+                .eq("id", vehicleId)
+
+            if (error) {
+                toast.error("Failed to delete vehicle")
+                console.error(error)
+            } else {
+                setVehicles(prev => prev.filter(v => v.id !== vehicleId))
+                toast.success("Vehicle deleted successfully")
+            }
         }
     }
 
@@ -170,6 +183,8 @@ export default function AdminInventoryPage() {
                                         <span>${vehicle.price.toLocaleString()}</span>
                                         <span>•</span>
                                         <span>{vehicle.condition === "brand_new" ? "Brand New" : "Foreign Used"}</span>
+                                        <span>•</span>
+                                        <span>{new Date(vehicle.created_at || Date.now()).toLocaleDateString()}</span>
                                     </div>
                                 </div>
 
