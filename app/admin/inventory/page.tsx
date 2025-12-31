@@ -32,15 +32,14 @@ export default function AdminInventoryPage() {
                 return
             }
 
-            const { data } = await supabase.from("vehicles").select("*").order("created_at", { ascending: false })
+            const { data, error } = await supabase.from("vehicles").select("*").order("created_at", { ascending: false })
 
-            if (!data || data.length === 0) {
-                // If DB empty/failed, fall back to local storage
-                const stored = getStoredVehicles()
-                setVehicles(stored.length > 0 ? stored : DEMO_VEHICLES)
-                setIsDemo(true)
+            if (error) {
+                console.error("Error fetching vehicles:", error)
+                toast.error("Failed to load inventory")
             } else {
-                setVehicles(data)
+                // If Supabase is active, strictly use DB data, even if empty
+                setVehicles(data || [])
             }
             setLoading(false)
         }
